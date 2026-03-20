@@ -1,0 +1,30 @@
+name: shorubenix-backend
+services:
+  - name: backend
+    type: worker
+    ports:
+      - port: 10000
+        protocol: http
+    routes:
+      - path: /
+        port: 10000
+    regions:
+      - fra
+    scalability:
+      min: 1
+      max: 1
+    instance_type: nano
+    env:
+      - key: DATABASE_URL
+        value: postgresql://uh68ejdcgxzosjxmzxl6:2DOjUOj9P5FSuhAeoQYub8qrxZajCq@bditexumkeggwqxmthvw-postgresql.services.clever-cloud.com:50013/bditexumkeggwqxmthvw
+      - key: JWT_SECRET
+        value: shobi-secret-key-2024
+      - key: PORT
+        value: "10000"
+    docker:
+      command: gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:10000
+    source:
+      git:
+        repository: shorubenixinfotech/shorubenix-web
+        branch: main
+        workdir: backend
